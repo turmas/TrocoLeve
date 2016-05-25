@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using TrocoLeve.Core;
 using TrocoLeve.Core.DataContracts;
 using TrocoLeve.Core.Processors;
+using TrocoLeve.Core.Util;
 
 namespace TrocoLeve.Core {
 	public class TrocoLeveManager {
 		public TrocoLeveManager() { }
 
 		public CalculateResponse Calculate(CalculateRequest calculateRequest) {
+
+			LogManager.WriteLog(calculateRequest);
 
 			CalculateResponse calculateResponse = new CalculateResponse();
 			try {
@@ -20,14 +23,12 @@ namespace TrocoLeve.Core {
 					calculateResponse.OperationReport = calculateRequest.ValidationReport;
 					return calculateResponse;
 				}
-
 				long changeAmount = calculateRequest.PaidAmount - calculateRequest.ProductAmount;
 				long tempChangeAmount = changeAmount;
 
 				List<ChangeData> tempChangeDataList = new List<ChangeData>();
 
 				do {
-
 					AbstractProcessor processor = ProcessorFactory.Create(tempChangeAmount);
 					if (processor == null) {
 						Report report = new Report();
@@ -52,13 +53,18 @@ namespace TrocoLeve.Core {
 
 				calculateResponse.ChangeDataList = tempChangeDataList;
 				calculateResponse.ChangeAmount = changeAmount;
+
 				calculateResponse.Success = true;
 			}
-			catch (Exception) {
+			catch (Exception ex) {
 				Report report = new Report();
 				report.Field = "";
 				report.Message = "An error has occurred. Please try again later. Our team has been contacted.";
 				calculateResponse.OperationReport.Add(report);
+				LogManager.WriteLog(ex);
+			}
+			finally {
+				LogManager.WriteLog(calculateResponse);				
 			}
 
 			return calculateResponse;
