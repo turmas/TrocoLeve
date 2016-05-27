@@ -38,6 +38,7 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Extensions" />
@@ -48,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Util\Processors\AbstractLogProcessor.cs" />
     <Compile Include="DataContracts\AbstractRequest.cs" />
     <Compile Include="DataContracts\AbstractResponse.cs" />
     <Compile Include="DataContracts\CalculateRequest.cs" />
@@ -65,6 +67,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\LogData.cs" />
     <Compile Include="Util\LogManager.cs" />
+    <Compile Include="Util\Processors\EventViewerLogProcessor.cs" />
+    <Compile Include="Util\Processors\FileLogProcessor.cs" />
+    <Compile Include="Util\Processors\LogProcessorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

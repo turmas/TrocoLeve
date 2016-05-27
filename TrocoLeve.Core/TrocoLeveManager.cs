@@ -7,6 +7,7 @@ using TrocoLeve.Core;
 using TrocoLeve.Core.DataContracts;
 using TrocoLeve.Core.Processors;
 using TrocoLeve.Core.Util;
+using TrocoLeve.Core.Util.Processors;
 
 namespace TrocoLeve.Core {
 	public class TrocoLeveManager {
@@ -14,7 +15,7 @@ namespace TrocoLeve.Core {
 
 		public CalculateResponse Calculate(CalculateRequest calculateRequest) {
 
-			LogManager.WriteLog(calculateRequest);
+			LogManager.Write(calculateRequest);
 
 			CalculateResponse calculateResponse = new CalculateResponse();
 			try {
@@ -61,10 +62,10 @@ namespace TrocoLeve.Core {
 				report.Field = "";
 				report.Message = "An error has occurred. Please try again later. Our team has been contacted.";
 				calculateResponse.OperationReport.Add(report);
-				LogManager.WriteLog(ex);
+				LogManager.Write(ex);
 			}
 			finally {
-				LogManager.WriteLog(calculateResponse);				
+				LogManager.Write(calculateResponse);				
 			}
 
 			return calculateResponse;

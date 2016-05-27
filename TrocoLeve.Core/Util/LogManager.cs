@@ -1,49 +1,35 @@
 ﻿using Dlp.Framework;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TrocoLeve.Core.DataContracts;
+using TrocoLeve.Core.Util.Processors;
 
 namespace TrocoLeve.Core.Util {
 	static internal class LogManager {
 		static LogManager() { }
-		private static string fileName = @"c:\Logs\TrocoLeve.log";
 
+		internal static void Write(Object logObject, [CallerMemberName]string logMethod = null) {
 
+			try {
+				string logTypeCollection = ConfigurationManager.AppSettings["logType"];
 
-		static internal void WriteLog(Object logObject, [CallerMemberName]string logMethod = null) {
+				string[] logTypeArray = logTypeCollection.Split(',', ';', '|');
 
-			string logType = "Undefined";
+				Parallel.ForEach<string>(logTypeArray, p => {
 
-			if (logObject is Exception) {
-				logType = "Exception";
-			}else if (logObject is AbstractRequest) {
-				logType = "Request";
-			}else if (logObject is AbstractResponse) {
-				logType = "Response";
+					AbstractLogProcessor logProcessor = LogProcessorFactory.Create(p);
+
+					logProcessor.WriteLog(logObject, logMethod);
+				});
 			}
-			
-			string messageToWrite;
-			messageToWrite = string.Format("[{0}] | {1} | {2} | {3}{4}",
-				DateTime.UtcNow,
-				logType,
-				logMethod,
-				Serializer.NewtonsoftSerialize(logObject),
-				Environment.NewLine 
-				);
-			
-			string directoryPath = Path.GetDirectoryName(fileName);
-			
-			if (Directory.Exists(directoryPath) == false) {
-				Directory.CreateDirectory(directoryPath);
-			}
-			
-			File.AppendAllText(fileName, messageToWrite);
+			catch (Exception) { }
 		}
-
 	}
 }

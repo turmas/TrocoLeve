@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TrocoLeve.Core.DataContracts {
-	public class ChangeData {
+
+	public sealed class ChangeData {
+		public ChangeData() { }
 		public int Amount { get; set; }
 		public long Quantity { get; set; }
 		public string CurrencyType { get; set; }
